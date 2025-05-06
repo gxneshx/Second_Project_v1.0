@@ -46,15 +46,15 @@ class UploadHandler(BaseHTTPRequestHandler):
 
     routes_get = {
         "/": "_handle_get_root",
-        "/upload/": "_handle_get_uploads"
+        "/upload/": "_handle_get_uploads",
     }
 
     routes_post = {
-        "/upload/": "_handle_post_upload"
+        "/upload/": "_handle_post_upload",
     }
 
     routes_delete = {
-        "/upload/": "_handle_delete_upload"
+        "/upload/": "_handle_delete_upload",
     }
 
     def _send_json_error(self, status_code: int, message: str) -> None:
@@ -80,17 +80,17 @@ class UploadHandler(BaseHTTPRequestHandler):
         response = {"detail": message}
         self.wfile.write(json.dumps(response).encode())
 
-    def do_GET(self) -> None:
+    def do_GET(self):
         """Handles GET requests and dispatches them based on the route."""
 
         self._handle_request(self.routes_get)
 
-    def do_POST(self) -> None:
+    def do_POST(self):
         """Handles POST requests and dispatches them based on the route."""
 
         self._handle_request(self.routes_post)
 
-    def do_DELETE(self) -> None:
+    def do_DELETE(self):
         """Handles DELETE requests and dispatches them based on the route."""
 
     def _handle_request(self, routes: dict[str, str]) -> None:
@@ -112,12 +112,17 @@ class UploadHandler(BaseHTTPRequestHandler):
                     break
 
         if not handler_name:
-            self._send_json_error(404, "Not found")
+            self._send_json_error(404, "Not found.")
+            return
+
+        handler = getattr(self, handler_name, None)
+        if not handler:
+            self._send_json_error(500, "Handler not implemented.")
             return
 
         handler()
 
-    def _handle_get_root(self) -> None:
+    def _handle_get_root(self):
         """Handles healthcheck at GET /."""
 
         logger.info("Healthcheck endpoint hit: /")
@@ -126,7 +131,7 @@ class UploadHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps({"message": "Welcome to the Image Hosting Server"}).encode())
 
-    def _handle_get_upload(self) -> None:
+    def _handle_get_upload(self):
         """Returns a list of uploaded images as JSON.
 
                 Side effects:
@@ -153,7 +158,7 @@ class UploadHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(files).encode())
 
-    def _handle_post_upload(self) -> None:
+    def _handle_post_upload(self):
         """Processes and saves an uploaded file.
 
                 Side effects:
@@ -181,6 +186,11 @@ class UploadHandler(BaseHTTPRequestHandler):
             files.append(file)
 
         try:
+            parse_form(headers, self.rfile, lambda _: None, on_file) # type: ignore[arg-type]
+        except APIError as e:
+            self._send_json_error(e.status_code, e.message)
+            return
+        try:
             saved_file_info = handle_uploaded_file(files[0])
         except APIError as e:
             self._send_json_error(e.status_code, e.message)
@@ -196,7 +206,7 @@ class UploadHandler(BaseHTTPRequestHandler):
             f" 'url': '{saved_file_info['url']}'}}".encode()
         )
 
-    def _handle_delete_upload(self) -> None:
+    def _handle_delete_upload(self):
         """Deletes a file by its name from the upload directory.
 
                 Side effects:
@@ -234,13 +244,13 @@ class UploadHandler(BaseHTTPRequestHandler):
             self._send_json_error(500, f"Internal server error: {str(e)}")
             return
 
-        logger.info(f"File '{filename}' deleted successfully.")
+        logger.info(f"File '{filename}' has been deleted successfully.")
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
         self.wfile.write(json.dumps({"message": f"File '{filename}' deleted successfully."}).encode())
 
-def run_server_on_port(port: int) -> None:
+def run_server_on_port(port: int):
     """Starts a single HTTP server instance on the specified port.
 
         Args:
@@ -256,7 +266,7 @@ def run_server_on_port(port: int) -> None:
     server = HTTPServer(("0.0.0.0", port), cast(RequestHandlerFactory, UploadHandler))
     server.serve_forever()
 
-def run(workers: int = 1, start_port: int = 8000) -> None:
+def run(workers: int = 1, start_port: int = 8000):
     """Starts multiple server worker processes for concurrent handling.
 
         Args:

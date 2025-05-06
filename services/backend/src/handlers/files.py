@@ -12,6 +12,9 @@ import os
 from datetime import datetime, UTC
 
 from settings.config import config
+from settings.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 def list_uploaded_images() -> list[dict[str, str | int]]:
     """Scans the upload directory and returns metadata for valid image files.
@@ -35,8 +38,10 @@ def list_uploaded_images() -> list[dict[str, str | int]]:
     try:
         filenames = os.listdir(config.IMAGES_DIR)
     except FileNotFoundError:
+        logger.info("Images directory not created.")
         raise FileNotFoundError("Images directory not found.")
     except PermissionError:
+        logger.info("Permission to access images directory is not granted.")
         raise PermissionError("Permission denied.")
 
     for filename in filenames:

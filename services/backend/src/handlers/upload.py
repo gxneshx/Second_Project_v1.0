@@ -12,13 +12,13 @@ Side effects:
 import os, uuid, shutil
 from typing import cast
 
-from PIL import Image, UnidentifiedFormatError, MaxSizeExceedError
+from PIL import Image, UnidentifiedImageError
 
 from settings.config import config
 from exceptions.api_errors import NotSupportedFormatError, MaxSizeExceedError
 from interfaces.protocols import SupportsWrite
 
-def handle_uploaded_file(file) -> dict[str, str]:
+def   handle_uploaded_file(file) -> dict[str, str]:
     """Validates and saves a single uploaded image file to disk.
 
         Args:
@@ -58,7 +58,7 @@ def handle_uploaded_file(file) -> dict[str, str]:
         image = Image.open(file.file_object)
         image.verify()
         file.file_object.seek(0)
-    except (UnidentifiedFormatError, OSError):
+    except (UnidentifiedImageError , OSError):
         raise NotSupportedFormatError(config.SUPPORTED_FORMATS)
 
     original_name = os.path.splitext(filename)[0].lower()

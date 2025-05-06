@@ -9,7 +9,6 @@ Side effects:
 """
 
 from pathlib import Path
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # The base directory for resolving relative paths
@@ -27,18 +26,19 @@ class AppConfig(BaseSettings):
             SUPPORTED_FORMATS (set[str]): A set of allowed file extensions.
     """
 
-    IMAGES_DIR: str
+    IMAGES_DIR: str # = f"{BASE_DIR.parent.parent}/images"
     WEB_SERVER_WORKERS: int
     WEB_SERVER_START_PORT: int
-    LOG_DIR: Path
+    LOG_DIR: str # Path # = f"{BASE_DIR.parent.parent}/logs"
 
     MAX_FILE_SIZE: int = 5 * 1024 * 1024
     SUPPORTED_FORMATS: set[str] = {'.jpg', '.png', '.gif'}
 
     model_config = SettingsConfigDict(
-        env_file=str(BASE_DIR / '.env'),
-        env_file_encoding='utf-8'
+        env_file=str(BASE_DIR / ".env"),
+        env_file_encoding="utf-8"
     )
+
 
 # The global application config instance
 config = AppConfig()
