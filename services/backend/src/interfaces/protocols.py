@@ -16,10 +16,10 @@ from socketserver import BaseRequestHandler
 from typing import Protocol, TypeVar, Any
 
 
-_T_contra = TypeVar('_T_contra', contravariant=True)
+_T_contra = TypeVar("_T_contra", contravariant=True)
 
 
-class SupportsWrite(_T_contra):
+class SupportsWrite(Protocol[_T_contra]):
     """The protocol for writable objects.
 
         Any object that implements the `write(s)` method and can accept data of type `_T_contra`.

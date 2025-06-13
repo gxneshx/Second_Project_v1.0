@@ -29,16 +29,16 @@ class AppConfig(BaseSettings):
     IMAGES_DIR: str # = f"{BASE_DIR.parent.parent}/images"
     WEB_SERVER_WORKERS: int
     WEB_SERVER_START_PORT: int
-    LOG_DIR: str # Path # = f"{BASE_DIR.parent.parent}/logs"
+    LOG_DIR: Path = f"{BASE_DIR.parent.parent}/logs"
 
-    MAX_FILE_SIZE: int = 5 * 1024 * 1024
+    MAX_SIZE: int = 5 * 1024 * 1024
     SUPPORTED_FORMATS: set[str] = {'.jpg', '.png', '.gif'}
 
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
-        env_file_encoding="utf-8"
+        env_file_encoding="utf-8",
+        extra='ignore'
     )
-
 
 # The global application config instance
 config = AppConfig()

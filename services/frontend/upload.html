@@ -6,21 +6,27 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Upload</title>
+    <link rel="icon" type="image/x-icon" href="base_images/ico/fav.png">
     <link rel="stylesheet" href="css/upload.css">
     <script src="js/upload.js" defer></script>
+    <script src="js/tabs.js" defer></script>
 </head>
 <body>
-<div class="page-container">
+<section class="page-container">
   <header class="header-container">
     <h1 class="header-title">Upload Photos</h1>
     <p class="header-subtitle">Upload selfies, memes, or any fun pictures here.</p>
   </header>
-  <div class="toggle-tab">
-      <button class="upload-pictures-button">Upload</button>
-      <button class="uploaded-images-button">Images</button>
-  </div>
+
+  <nav class="toggle-tabs">
+      <span class="toggle-tab active upload-pictures-button" data-tab="upload">Upload</span>
+      <span class="toggle-tab inactive uploaded-images-button" data-tab="images">Images</span>
+  </nav>
+
+  <!-- Upload section -->
+  <section id="upload-tab" class="upload-section tab-content">
   <div class="upload-pad">
-      <div class="cloud-picture-container">
+      <div class="cloud-picture-container" id="dropArea">
           <svg class="cloud-picture" width="47" height="39" viewBox="0 0 47 39" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M31.5 27.5L23.5 19.5L15.5 27.5" stroke="#4676FB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M23.5 19.5V37.5" stroke="#4676FB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -29,18 +35,47 @@
           </svg>
       </div>
       <div class="description-container">
-          <div class="description-title">Select a file or drag and drop here</div>
-          <div class="description-text">Only support .jpg, .png, and gif.</br>Maximum file size is 5MB </div>
+          <p class="upload-main-text" id="upload-main-text">Select a file or drag and drop here</p>
+          <p class="description-text" id="upload-sub-text">Only support .jpg, .png, and gif.<br>Maximum file size is 5MB</p>
       </div>
   </div>
-    <button class="browse-button browse-button-text">Browse your file</button>
-    <div class="url-container">
+
+        <label for="fileInput" class="browse-button browse-button-text" id="browse-button">Browse your file</label>
+        <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.gif"/>
+
+    <section class="url-container">
         <span class="url-title url-title-text">Current Upload</span>
         <div class="url-upload">
-            <div class="url" contenteditable="true">https://</div>
-            <button class="url-copy-button url-copy-button-text">Copy</button>
+            <input class="url" type="text" id="resultLink" name="resultLink" placeholder="https://" readonly/>
+            <button class="url-copy-button url-copy-button-text" id="copyBtn">Copy</button>
         </div>
-    </div>
-</div>
+    </section>
+</section>
+
+<!-- Images Section -->
+
+<section class="images-section tab-content hidden" id="images-tab">
+    <table class="hidden-table table">
+        <tr class="table-header">
+            <td id="name-column-header">Name</td>
+            <td id="url-column-header">URL</td>
+            <td id="delete-column-header">Delete</td>
+        </tr>
+        <tr class="image-table-row">
+            <td class="images-name-column"><span class="image-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 0H1C0.4 0 0 0.4 0 1V15C0 15.6 0.4 16 1 16H15C15.6 16 16 15.6 16 15V1C16 0.4 15.6 0 15 0ZM6 4C6.6 4 7 4.4 7 5C7 5.6 6.6 6 6 6C5.4 6 5 5.6 5 5C5 4.4 5.4 4 6 4ZM3 12L5 8L7 10L10 6L13 12H3Z" fill="#0060FF"/>
+                </svg></span>
+                <span class="uploaded-image-name">Cat.png</span></td>
+            <td class="images-url-column"><span class="uploaded-image-url">https://sharefile.xyz/file.jpg</span></td>
+            <td class="images-delete-column"><span class="delete-icon">
+                <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle opacity="0.05" cx="15" cy="15" r="15" fill="#FF0000"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.8356 11.6575C19.0345 11.6575 19.2 11.8226 19.2 12.0327V12.2269C19.2 12.4318 19.0345 12.602 18.8356 12.602H10.3649C10.1655 12.602 10 12.4318 10 12.2269V12.0327C10 11.8226 10.1655 11.6575 10.3649 11.6575H11.8551C12.1578 11.6575 12.4213 11.4423 12.4894 11.1387L12.5674 10.7902C12.6887 10.3154 13.0879 10 13.5447 10H15.6553C16.1072 10 16.5108 10.3154 16.6276 10.7651L16.7111 11.1382C16.7787 11.4423 17.0422 11.6575 17.3454 11.6575H18.8356ZM18.0785 18.7575C18.2341 17.3075 18.5065 13.8626 18.5065 13.8279C18.5164 13.7226 18.4821 13.6229 18.414 13.5427C18.341 13.4675 18.2485 13.4231 18.1466 13.4231H11.0572C10.9548 13.4231 10.8574 13.4675 10.7898 13.5427C10.7212 13.6229 10.6874 13.7226 10.6924 13.8279C10.6933 13.8342 10.703 13.9556 10.7194 14.1585C10.792 15.0597 10.9942 17.5697 11.1248 18.7575C11.2173 19.6325 11.7914 20.1824 12.623 20.2024C13.2648 20.2172 13.9259 20.2223 14.6019 20.2223C15.2387 20.2223 15.8854 20.2172 16.547 20.2024C17.4074 20.1876 17.9811 19.6473 18.0785 18.7575Z" fill="#FF0000"/>
+                </svg></span>
+            </td>
+        </tr>
+    </table>
+</section>
 </body>
 </html>

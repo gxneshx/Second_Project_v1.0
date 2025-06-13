@@ -18,7 +18,7 @@ Side effects:
 import json, os
 from multiprocessing import Process, current_process
 from typing import cast
-from http.server import HTTPServer, BaseHTTPRequestHandler, SimpleHTTPRequestHandler
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
 from python_multipart import parse_form
 
@@ -93,15 +93,17 @@ class UploadHandler(BaseHTTPRequestHandler):
     def do_DELETE(self):
         """Handles DELETE requests and dispatches them based on the route."""
 
+        self._handle_request(self.routes_delete)
+
     def _handle_request(self, routes: dict[str, str]) -> None:
-        """Resolves path to appropriate handler method and calls it.
+        """Resolves a path to the appropriate handler method and calls it.
 
                 Args:
-                    routes (dict[str, str]): Mapping of path to handler method names.
+                    routes (dict[str, str]): Mapping of a path to handler method names.
 
                 Side effects:
-                    - Calls appropriate handler method.
-                    - Sends 404 or 500 response if handler is not found or not implemented.
+                    - Calls the appropriate handler method.
+                    - Sends 404 or 500 responses if handler is not found or not implemented.
         """
 
         handler_name = routes.get(self.path)
@@ -129,7 +131,7 @@ class UploadHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
-        self.wfile.write(json.dumps({"message": "Welcome to the Image Hosting Server"}).encode())
+        self.wfile.write(json.dumps({"message": "Welcome to the Image Hosting Server v1.0"}).encode())
 
     def _handle_get_upload(self):
         """Returns a list of uploaded images as JSON.
@@ -157,6 +159,35 @@ class UploadHandler(BaseHTTPRequestHandler):
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
         self.wfile.write(json.dumps(files).encode())
+
+    def _handle_get_uploads(self):
+        """Returns a list with all uploaded image files as JSON.
+
+        Side effects:
+            - Reads image directory.
+            - Sends HTTP response or error.
+
+        """
+
+        try:
+            files = list_uploaded_images()
+        except FileNotFoundError:
+            self._send_json_error(500, "Images directory not found.")
+            return
+        except PermissionError:
+            self._send_json_error(500, "Permission denied to access the images directory.")
+            return
+
+        if not files:
+            self._send_json_error(404, "No images found.")
+            return
+
+        logger.info(f"Returned list of {len(files)} uploaded images.")
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps(files).encode())
+
 
     def _handle_post_upload(self):
         """Processes and saves an uploaded file.
@@ -224,19 +255,19 @@ class UploadHandler(BaseHTTPRequestHandler):
             self._send_json_error(400, "Filename not provided.")
             return
 
-        filename = os.path.join(config.IMAGES_DIR, filename)
+        full_filename = os.path.join(config.IMAGES_DIR, filename)
         ext = os.path.splitext(filename)[1].lower()
 
         if ext not in config.SUPPORTED_FORMATS:
             self._send_json_error(400, "Unsupported file format.")
             return
 
-        if not os.path.isfile(filename):
+        if not os.path.isfile(full_filename):
             self._send_json_error(404, "File not found.")
             return
 
         try:
-            os.remove(filename)
+            os.remove(full_filename)
         except PermissionError:
             self._send_json_error(500, "Permission denied.")
             return
@@ -248,7 +279,7 @@ class UploadHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
-        self.wfile.write(json.dumps({"message": f"File '{filename}' deleted successfully."}).encode())
+        self.wfile.write(json.dumps({"message": f"File '{filename}' has been deleted successfully."}).encode())
 
 def run_server_on_port(port: int):
     """Starts a single HTTP server instance on the specified port.

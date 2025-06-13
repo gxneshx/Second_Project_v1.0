@@ -53,7 +53,7 @@ button {
     color: #0B0B0B;
 }
 
-.toggle-tab {
+.toggle-tabs {
     position: absolute;
     display: inline;
     transform: translate(-50%);
@@ -64,6 +64,20 @@ button {
     font-weight: 700;
     font-size: 20px;
     line-height: 100%;
+}
+
+.toggle-tab {
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.toggle-tab.active {
+    color: #0060FF;
+}
+
+.toggle-tab.inactive {
+    color: #ADC0F8;
 }
 
 .upload-pictures-button {
@@ -133,11 +147,11 @@ button {
     height: 63px;
     position: absolute;
     display: inline-block;
-    top: 130px;
+    top: 110px;
     left: 135px;
 }
 
-.description-title {
+.upload-main-text {
     position: relative;
     align-content: center;
     width: 270px;
@@ -157,6 +171,11 @@ button {
     font-size: 14px;
     text-align: center;
     color: #ADC0F8;
+    margin-top: -10px;
+}
+
+input[type="file"] {
+    display: none;
 }
 
 .browse-button {
@@ -164,13 +183,14 @@ button {
     display: inline;
     transform: translate(-50%);
     left: 50%;
-    width: 539px;
-    height: 39px;
+    width: 509px;
+    height: 20px;
     background-color: #0060FF;
     top: 451px;
     border-radius: 7px;
     padding: 12px 16px;
     border: none;
+    cursor: pointer;
 }
 
 .browse-button-text {
@@ -181,6 +201,7 @@ button {
     text-transform: uppercase;
     line-height: 100%;
     letter-spacing: 0.02em;
+    align-content: center;
 }
 
 .url-container {
@@ -230,6 +251,10 @@ button {
     width: 441px;
     height: 20px;
     letter-spacing: 0.02em;
+    border: none;
+    background-color: #FAFAFA;
+    outline: none;
+    caret-color: transparent;
 }
 
 .url-copy-button {
@@ -253,7 +278,7 @@ button {
 
 /* Query for failed uploads */
 
-.description-title-failed-upload {
+.upload-error {
     font-weight: 600;
     font-size: 14px;
     line-height: 100%;
@@ -278,4 +303,146 @@ button {
     width: 441px;
     height: 20px;
     letter-spacing: 0.02em;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Upload part */
+
+.hidden-table {
+    visibility: visible;
+}
+
+/* If at least one image is uploaded, remove the '.hidden-table' class for the table and add the following one instead*/
+
+.table {
+    position: absolute;
+    transform: translate(-50%);
+    display: flex;
+    width: 806px;
+    height: 282px;
+    top: 171px;
+    left: 50%;
+    padding: 20px;
+    border-spacing: 0 16px;
+}
+
+.table-headers {
+    position: relative;
+    display: inline-flex;
+    width: 766px;
+    height: 17px;
+    justify-content: space-between;
+}
+
+#name-column-header {
+    width: 344px;
+    height: 17px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0;
+    color: #0B0B0B;
+}
+
+#url-column-header {
+    width: 310px;
+    height: 17px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0;
+    color: #0B0B0B;
+}
+
+#delete-column-header {
+    width: 108px;
+    height: 17px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: -0.02em;
+    color: #0B0B0B;
+}
+
+/* Queries to add when image(-s) are uploaded */
+
+.image-table-row {
+    display: inline-table;
+    width: 766px;
+    height: 30px;
+    justify-content: space-between;
+    vertical-align: center;
+}
+
+.images-name-column {
+    width: 315px;
+    height: 19px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0;
+    color: #0B0B0B;
+}
+
+.image-icon {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+}
+
+/* Adds the uploaded image name */
+.uploaded-image-name {
+    position: relative;
+    display: inline-block;
+    left: 31px;
+    width: 300px;
+    height: 19px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+    letter-spacing: 0;
+    color: #0B0B0B;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.images-url-column {
+    width: 284px;
+    height: 20px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0;
+    color: #0B0B0B;
+}
+
+/* Adds a unique URL generated for an uploaded image */
+.uploaded-image-url {
+    position: relative;
+    vertical-align: super;
+    display: inline-block;
+    width: 284px;
+    height: 20px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+    color: #0B0B0B;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.images-delete-column {
+    width: 100px;
+    height: 30px;
+}
+
+.delete-icon {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
 }
