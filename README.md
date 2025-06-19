@@ -1,8 +1,12 @@
-📷 Image Hosting Server v1.0
+# 📷 Image Hosting Server v1.0
 
 A lightweight containerized service for uploading, viewing, and managing images via a browser interface.
 It features a drag-and-drop uploader, automatic URL generation, image listing with delete support, and persistent logging—all powered by a clean backend plus frontend separation. The static is stored with Nginx, and everything is managed with Docker Compose.
-✨ Table of Contents
+
+---
+
+
+## ✨ Table of Contents
 
     Overview
     Features
@@ -11,19 +15,26 @@ It features a drag-and-drop uploader, automatic URL generation, image listing wi
     Project Structure
     Tech Stack
 
-📌 Overview
+---
+
+
+## 📌 Overview
 
 This project is a mini fullstack service built for uploading and sharing images through a clean UI.
 It includes:
 
-    A backend server written in Python (no frameworks, just http.server)
+    A backend server written in pure Python (no frameworks, just using standard library `http.server` with custom routing)
     A modern frontend UI with drag-and-drop support
     Nginx reverse proxy with multi-port load balancing
-    Logging of all backend and access events
-    Simple REST API with routes for uploading, listing, and deleting images
+    Comprehensive logging of all the backend and access events
+    RESTful API with routes for uploading, listing, and deleting images
 
 All components are containerized and orchestrated via docker-compose.
-🚀 Features
+
+---
+
+
+## 🚀 Features
 
     📤 Upload via Drag & Drop or Button
     Users can upload .jpg, .png, or .gif images by clicking a button or dragging files into the UI.
@@ -40,10 +51,16 @@ All components are containerized and orchestrated via docker-compose.
     🧠 Error Feedback
     All user errors (incorrect type, large size, network issues) are shown immediately on-screen.
 
+    🔄 Real-time Updates
+    Image listing automatically updates after uploads and deletions without page refresh.
+
     📦 Dockerized Deployment
     The entire stack runs with a single command using Docker Compose.
 
-⚙️ Installation
+---
+
+
+## ⚙️ Installation
 
 Clone the repository and start the containers:
 
@@ -53,36 +70,32 @@ docker-compose up --build
 
 Before running the server, configure the environment variables for the backend:
 
-    Navigate to the backend service directory:
-
     cd services/backend
-
-    Copy the sample file and adjust the values as needed:
-
     cp .env.sample .env
 
-    Sample .env.sample:
+Edit the `.env` file with your configuration. Sample variables:
 
-    # Directory where uploaded images will be stored 
+    # Directory where uploaded images will be stored
     IMAGES_DIR=/usr/src/images
 
-    # Directory where log files will be written
+    # Directory where log files will be written  
     LOG_DIR=/var/log
+    
+    # Number of worker processes to spawn for HTTP server (4 is an example)
+    WEB_SERVER_WORKERS=4
 
-    # Number of worker processes to spawn for HTTP server (10 is an example)
-    WEB_SERVER_WORKERS=10
-
-    # Starting port number for worker processes (each worker gets a unique port)
+    # Starting port number for worker processes
     WEB_SERVER_START_PORT=8000
-
-Make sure the IMAGES_DIR and LOG_DIR match the volume paths defined in docker-compose.yml.
 
 Then visit:
 http://localhost
 
+---
 
-📂 Usage
-Web UI
+
+## 📂 Usage
+
+### Web UI
 
     Open the browser and go to http://localhost (start page)
     Click the only blue button - it gets you to the main page for uploading images
@@ -91,8 +104,10 @@ Web UI
     Switch to the "Images" tab to see all uploaded files
     Click the trash icon to delete any file or copy the file name/url manually to use further
 
+---
 
-📁 Project Structure
+
+## 📁 Project Structure
 
 .
 ├── README.md
@@ -140,12 +155,35 @@ Web UI
     └── nginx/
         └── nginx.conf
 
-🧰 Tech Stack
+---
 
-Layer 	Technology
-Backend 	Python http.server, custom routing, custom logging
-Frontend 	HTML, CSS, JavaScript
-Web Server 	Nginx
-Logging 	Python Logging + Nginx logs
-Packaging 	Docker, Docker Compose
-Styling 	Custom CSS (no frameworks)
+
+## 🧰 Tech Stack
+
+| Layer      | Technology                                                               |
+|------------|--------------------------------------------------------------------------|
+| Backend    | Pure Python http.server, custom routing, custom logging, multiprocessing | 
+| Frontend   | HTML5, CSS3, JavaScript                                                  |
+| Web Server | Nginx (reverse proxy)                                                    |
+| Logging    | Python Logging + Nginx logs                                              |
+| Packaging  | Docker, Docker Compose                                                   |
+| Styling    | Custom CSS with responsive design (no frameworks)                        |
+| API        | RESTful with JSON responses                                              |
+
+___
+
+
+## 🔧 API Endpoints
+
+| Method | Endpoint                 | Description           |
+|--------|--------------------------|-----------------------|
+| POST   | `/api/upload/`           | Upload new image      |
+| GET    | `/api/upload`            | List all images       |
+| DELETE | `/api/upload/{filename}` | Remove specific image |
+
+---
+
+
+## 🚨 Important Notes
+
+- `IMAGES_DIR` and `LOG_DIR` should match volume mounts in docker-compose.yml
