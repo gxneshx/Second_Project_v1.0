@@ -86,8 +86,6 @@ button {
     vertical-align: middle;
     color: #0060FF;
     background-color: #F2F5FF;
-    width: 70px;
-    height: 24px;
 
     font-weight: 700;
     font-size: 20px;
@@ -102,8 +100,6 @@ button {
     left: 14px;
     color: #ADC0F8;
     background-color: #F2F5FF;
-    width: 72px;
-    height: 24px;
     font-weight: 700;
     font-size: 20px;
     line-height: 100%;
@@ -121,6 +117,12 @@ button {
     border-radius: 10px;
     padding: 16px 32px;
     border: 2px dashed #0060FF;
+}
+
+.upload-pad.dragover {
+    border-color: #0060FF;
+    background: rgba(0, 96, 255, 0.05);
+    transition: background 0.2s;
 }
 
 .cloud-picture-container {
@@ -160,6 +162,8 @@ button {
     font-size: 14px;
     text-align: center;
     color: #0B0B0B;
+    overflow-x: clip;
+    overflow-y: clip;
 }
 
 .description-text {
@@ -285,7 +289,6 @@ input[type="file"] {
     letter-spacing: 0;
     text-align: center;
     color: #FF0000;
-    /* Upload failed */
     position: relative;
     align-content: center;
     width: 270px;
@@ -311,138 +314,87 @@ input[type="file"] {
 
 /* Upload part */
 
-.hidden-table {
-    visibility: visible;
+.no-images-msg {
+    position: absolute;
+    padding: 40px;
+    top: 130px;
+    left: 50%;
+    transform: translate(-50%);
 }
-
-/* If at least one image is uploaded, remove the '.hidden-table' class for the table and add the following one instead*/
 
 .table {
     position: absolute;
     transform: translate(-50%);
-    display: flex;
+    display: block;
     width: 806px;
     height: 282px;
     top: 171px;
     left: 50%;
     padding: 20px;
-    border-spacing: 0 16px;
 }
 
-.table-headers {
+.table-header,
+.table-row {
     position: relative;
-    display: inline-flex;
+    display: flex;
     width: 766px;
-    height: 17px;
-    justify-content: space-between;
+    height: 35px;
 }
 
-#name-column-header {
+.table-row p {
+    margin: 0 0 0 0;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0;
+    color: #0B0B0B;
+    overflow: hidden;
+    display: block;
+    white-space: nowrap;
+    text-align: left;
+    align-content: center;
+}
+
+#name-column,
+.file-name {
     width: 344px;
-    height: 17px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 100%;
-    letter-spacing: 0;
-    color: #0B0B0B;
+    align-content: center;
 }
 
-#url-column-header {
-    width: 310px;
-    height: 17px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 100%;
-    letter-spacing: 0;
-    color: #0B0B0B;
+.file-name span {
+    position: relative;
+    left: 22px;
 }
 
-#delete-column-header {
-    width: 108px;
-    height: 17px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 100%;
-    letter-spacing: -0.02em;
-    color: #0B0B0B;
-}
-
-/* Queries to add when image(-s) are uploaded */
-
-.image-table-row {
-    display: inline-table;
-    width: 766px;
-    height: 30px;
-    justify-content: space-between;
-    vertical-align: center;
-}
-
-.images-name-column {
-    width: 315px;
-    height: 19px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 100%;
-    letter-spacing: 0;
-    color: #0B0B0B;
-}
-
-.image-icon {
+.file-icon {
+    width: 18px;
+    height: 13px;
     position: absolute;
-    width: 16px;
-    height: 16px;
+    padding-left: 2px;
 }
 
-/* Adds the uploaded image name */
-.uploaded-image-name {
+#url-column,
+.file-url {
     position: relative;
-    display: inline-block;
-    left: 31px;
-    width: 300px;
-    height: 19px;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 100%;
-    letter-spacing: 0;
-    color: #0B0B0B;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    left: 10px;
+    width: 310px;
+    align-content: center;
 }
 
-.images-url-column {
-    width: 284px;
-    height: 20px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 100%;
-    letter-spacing: 0;
-    color: #0B0B0B;
-}
-
-/* Adds a unique URL generated for an uploaded image */
-.uploaded-image-url {
+#delete-column,
+.file-delete {
     position: relative;
-    vertical-align: super;
-    display: inline-block;
-    width: 284px;
-    height: 20px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    letter-spacing: 0;
-    color: #0B0B0B;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    left: 20px;
+    width: 108px;
+    align-content: center;
 }
 
-.images-delete-column {
-    width: 100px;
-    height: 30px;
-}
-
-.delete-icon {
-    position: relative;
-    display: inline-block;
-    width: 30px;
-    height: 30px;
+.delete-btn {
+  background: rgba(255, 0, 0, 0.05);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 14px;
+  cursor: pointer;
 }

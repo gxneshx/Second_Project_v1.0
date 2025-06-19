@@ -133,32 +133,6 @@ class UploadHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps({"message": "Welcome to the Image Hosting Server v1.0"}).encode())
 
-    def _handle_get_upload(self):
-        """Returns a list of uploaded images as JSON.
-
-                Side effects:
-                    - Reads image directory.
-                    - Sends either an HTTP response or an error.
-        """
-
-        try:
-            files = list_uploaded_images()
-        except FileNotFoundError:
-            self._send_json_error(500, "Images directory not found.")
-            return
-        except PermissionError:
-            self._send_json_error(500, "Permission denied.")
-            return
-
-        if not files:
-            self._send_json_error(404, "No images found.")
-            return
-
-        logger.info(f"Returned list of {len(files)} uploaded images.")
-        self.send_response(200)
-        self.send_header('Content-Type', 'application/json')
-        self.end_headers()
-        self.wfile.write(json.dumps(files).encode())
 
     def _handle_get_uploads(self):
         """Returns a list with all uploaded image files as JSON.
@@ -233,8 +207,8 @@ class UploadHandler(BaseHTTPRequestHandler):
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
         self.wfile.write(
-            f"{{'filename': '{saved_file_info['filename']}',"
-            f" 'url': '{saved_file_info['url']}'}}".encode()
+            f'{{"filename": "{saved_file_info["filename"]}", '
+            f' "url": "{saved_file_info["url"]}"}}'.encode()
         )
 
     def _handle_delete_upload(self):

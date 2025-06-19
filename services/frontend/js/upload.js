@@ -1,5 +1,5 @@
 /**
- * Image-host front-end logic
+ * Image-host frontend logic
  * - Upload via button or drag-&-drop
  * - List uploaded images
  * - Delete images
@@ -17,10 +17,11 @@
         resultInput: '#resultLink',
         copyBtn: '#copyBtn',
         uploadText: '.upload-main-text, .upload-error',
-        dropArea: '#dropArea',
+        uploadArea: '#uploadArea',
         imgSection: '#images-tab',
+        table: '.hidden-table',
         tableHeader: '.table-header',
-        imgTabBtn: '.tab[data-tab="images"]',
+        imgTabBtn: '.toggle-tab[data-tab="images"]',
     };
 
     const $ = (s) => document.querySelector(s);
@@ -80,9 +81,9 @@
         const resultInput = $(SEL.resultInput);
         const copyBtn = $(SEL.copyBtn);
         const uploadText = $(SEL.uploadText);
-        const dropArea = $(SEL.dropArea);
+        const uploadArea = $(SEL.uploadArea);
 
-        if (!uploadBtn || !fileInput || !resultInput || !copyBtn || !uploadText || !dropArea) return;
+        if (!uploadBtn || !fileInput || !resultInput || !copyBtn || !uploadText || !uploadArea) return;
 
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         const maxSize = 5 * 1024 * 1024;
@@ -125,13 +126,13 @@
 
         const prevent = (e) => e.preventDefault();
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(ev =>
-            dropArea.addEventListener(ev, prevent, false));
+            uploadArea.addEventListener(ev, prevent, false));
 
-        dropArea.addEventListener('dragenter', () => dropArea.classList.add('dragover'));
-        dropArea.addEventListener('dragover', () => dropArea.classList.add('dragover'));
-        dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
-        dropArea.addEventListener('drop', (e) => {
-            dropArea.classList.remove('dragover');
+        uploadArea.addEventListener('dragenter', () => uploadArea.classList.add('dragover'));
+        uploadArea.addEventListener('dragover', () => uploadArea.classList.add('dragover'));
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            uploadArea.classList.remove('dragover');
             const file = e.dataTransfer.files[0];
             if (file) uploadFile(file);
         });
@@ -142,6 +143,7 @@
      */
     function initImagesTab() {
         const imgSection = $(SEL.imgSection);
+        const table = $(SEL.table);
         const tableHeader = $(SEL.tableHeader);
         const imgTabBtn = $(SEL.imgTabBtn);
         if (!imgSection || !tableHeader || !imgTabBtn) return;
@@ -185,17 +187,17 @@
                     const row = document.createElement('div');
                     row.className = 'table-row';
                     row.innerHTML = `
-                        <div class="file-name">
+                        <p class="file-name">
                           <img src="${location.origin}/images/${filename}" alt="" class="file-icon" />
                           <span>${filename}</span>
-                        </div>
-                        <div class="file-url">${location.origin}/images/${filename}</div>
-                        <div class="file-delete">
-                          <button class="delete-btn"><i class="fas fa-trash-alt"></i></button>
-                        </div>`;
+                        </p>
+                        <p class="file-url">${location.origin}/images/${filename}</p>
+                        <p class="file-delete">
+                          <button class="delete-btn"><img src="${location.origin}/base_images/ico/delete_trash_icon.png" alt="delete button"></button>
+                        </p>`;
                     row.querySelector('.delete-btn')
                         .addEventListener('click', () => deleteImage(filename, row));
-                    imgSection.appendChild(row);
+                    table.appendChild(row);
                 });
             } catch (e) {
                 tableHeader.style.display = 'none';

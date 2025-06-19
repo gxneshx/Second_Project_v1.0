@@ -70,4 +70,7 @@ def   handle_uploaded_file(file) -> dict[str, str]:
         file.file_object.seek(0)
         shutil.copyfileobj(file.file_object, cast(SupportsWrite, f))
 
-    return {"filename": unique_name, "url": f"/images/{unique_name}"}
+    return {
+        "filename": unique_name,
+        "url": f"/images/{unique_name}"
+    }
