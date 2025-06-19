@@ -1,7 +1,7 @@
-📷 Image Hosting Server
+📷 Image Hosting Server v1.0
 
 A lightweight containerized service for uploading, viewing, and managing images via a browser interface.
-It features a drag-and-drop uploader, automatic URL generation, image listing with delete support, and persistent logging — all powered by a clean backend + frontend separation and managed with Docker Compose.
+It features a drag-and-drop uploader, automatic URL generation, image listing with delete support, and persistent logging—all powered by a clean backend plus frontend separation. The static is stored with Nginx, and everything is managed with Docker Compose.
 ✨ Table of Contents
 
     Overview
@@ -38,7 +38,7 @@ All components are containerized and orchestrated via docker-compose.
     The UI allows switching between "Upload" and "Images" views without reloading the page.
 
     🧠 Error Feedback
-    All user errors (bad type, large size, network issues) are shown immediately on-screen.
+    All user errors (incorrect type, large size, network issues) are shown immediately on-screen.
 
     📦 Dockerized Deployment
     The entire stack runs with a single command using Docker Compose.
@@ -47,8 +47,8 @@ All components are containerized and orchestrated via docker-compose.
 
 Clone the repository and start the containers:
 
-git clone https://github.com/wspjoy2011/upload-server.git
-cd upload-server
+git clone https://github.com/gxneshx/Second_Project_v1.0.git
+cd Second_Project_v1.0
 docker-compose up --build
 
 Before running the server, configure the environment variables for the backend:
@@ -69,7 +69,7 @@ Before running the server, configure the environment variables for the backend:
     # Directory where log files will be written
     LOG_DIR=/var/log
 
-    # Number of worker processes to spawn for HTTP server
+    # Number of worker processes to spawn for HTTP server (10 is an example)
     WEB_SERVER_WORKERS=10
 
     # Starting port number for worker processes (each worker gets a unique port)
@@ -79,14 +79,18 @@ Make sure the IMAGES_DIR and LOG_DIR match the volume paths defined in docker-co
 
 Then visit:
 http://localhost
+
+
 📂 Usage
 Web UI
 
-    Open the browser and go to http://localhost
+    Open the browser and go to http://localhost (start page)
+    Click the only blue button - it gets you to the main page for uploading images
     Drag and drop or select a file to upload
     Copy the generated image URL
     Switch to the "Images" tab to see all uploaded files
-    Click the trash icon to delete any file
+    Click the trash icon to delete any file or copy the file name/url manually to use further
+
 
 📁 Project Structure
 
@@ -96,7 +100,6 @@ Web UI
 ├── images/                      # Uploaded files stored here (mounted volume)
 ├── logs/
 │   ├── app.log                  # Backend logs
-│   ├── pgbouncer/
 │   └── nginx/
 │       ├── access.log
 │       └── error.log
@@ -105,6 +108,7 @@ Web UI
     │   ├── Dockerfile
     │   ├── poetry.lock
     │   ├── pyproject.toml
+    │   ├── .env                  # Environmental variables
     │   └── src/
     │       ├── app.py
     │       ├── exceptions/
@@ -121,28 +125,27 @@ Web UI
     │   ├── index.html
     │   ├── upload.html
     │   ├── css/
-    │   │   ├── styles.css
+    │   │   ├── index.css
     │   │   └── upload.css
     │   ├── js/
     │   │   ├── upload.js
     │   │   ├── tabs.js
-    │   │   └── random-hero.js
+    │   │   └── index.js
     │   ├── base_images/
     │       ├── 1.svg ... 5.svg
     │       └── ico/
+    │           ├── delete_trash_icon.png
     │           └── fav.png
     │        
     └── nginx/
         └── nginx.conf
 
 🧰 Tech Stack
+
 Layer 	Technology
-Backend 	Python http.server, custom routing
+Backend 	Python http.server, custom routing, custom logging
 Frontend 	HTML, CSS, JavaScript
 Web Server 	Nginx
 Logging 	Python Logging + Nginx logs
 Packaging 	Docker, Docker Compose
 Styling 	Custom CSS (no frameworks)
-✅ License
-
-MIT License. Use freely, fork, or extend.
