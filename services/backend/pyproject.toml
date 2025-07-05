@@ -1,11 +1,10 @@
 [project]
-name = "images-server"
+name = "images-hosting-server"
 version = "0.1.0"
 description = "Image upload server with Docker and Nginx"
 authors = [
-    {name = "Yuriy Okal",email = "wspjoy@google.com"}
+    {name = "Mykhailo Kalchenko",email = "kalchenko.michael@gmail.com"}
 ]
-license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
